@@ -19,6 +19,8 @@ const CalculatorApp = () => {
     multiplyOperation,
     subtractOperation,
     addOperation,
+    // calculateSubResult,
+    calculateResult,
   } = useCalculator();
 
   return (
@@ -63,7 +65,7 @@ const CalculatorApp = () => {
       <View style={globalStyles.row}>
         <CalculatorButton label="0" doubleSize onPress={() => buildNumber("0")} />
         <CalculatorButton label="." onPress={() => buildNumber(".")} />
-        <CalculatorButton label="=" onPress={() => console.log("Tap Here")} color={Colors.orange} />
+        <CalculatorButton label="=" onPress={calculateResult} color={Colors.orange} />
       </View>
     </View>
   );
