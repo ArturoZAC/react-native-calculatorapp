@@ -1,18 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 
 enum Operator {
-  Add = "+",
-  Subtract = "-",
-  Multiply = "x",
-  Divide = "÷",
+  add = "+",
+  subtract = "-",
+  multiply = "x",
+  divide = "÷",
 }
 
 export const useCalculator = () => {
   const [formula, setFormula] = useState("0");
   const [number, setNumber] = useState("0");
   const [prevNumber, setPrevNumber] = useState("0");
-
   const lastOperation = useRef<Operator>(undefined);
+
+  // useEffect(() => {
+  //   console.log({ formula });
+  // }, [formula]);
+
+  useEffect(() => {
+    if (lastOperation.current) {
+      const firstFormulaPart = formula.split(" ").at(0);
+      setFormula(`${firstFormulaPart} ${lastOperation.current} ${number}`);
+    } else {
+      setFormula(number);
+    }
+  }, [number]);
+
+  // useEffect(() => {
+  //   setFormula(number);
+  // }, [number]);
 
   const clean = () => {
     setFormula("0");
@@ -44,9 +60,34 @@ export const useCalculator = () => {
     setNumber("0");
   };
 
-  useEffect(() => {
-    setFormula(number);
-  }, [number]);
+  const setLastNumber = () => {
+    if (number.endsWith(".")) {
+      setPrevNumber(number.slice(0, -1));
+    }
+
+    setPrevNumber(number);
+    setNumber("0");
+  };
+
+  const divideOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.divide;
+  };
+
+  const multiplyOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.multiply;
+  };
+
+  const subtractOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.subtract;
+  };
+
+  const addOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.add;
+  };
 
   const buildNumber = (numberString: string) => {
     if (number.includes(".") && numberString === ".") return;
@@ -81,5 +122,9 @@ export const useCalculator = () => {
     clean,
     toggleSign,
     deleteLast,
+    divideOperation,
+    multiplyOperation,
+    subtractOperation,
+    addOperation,
   };
 };
